@@ -99,7 +99,7 @@ class HttpResponse(HttpMessage):
 async def parse_http_header_fields(reader: asyncio.StreamReader) -> HttpHeaders:
     headers = {}
 
-    while (line := await reader.readline()) != B_CRLF:
+    while (line := await reader.readuntil(B_CRLF)) != B_CRLF:
         field_name, field_value = line.rstrip(B_CRLF).split(b":", maxsplit=1)
         headers[field_name.decode()] = field_value.strip().decode()
 
@@ -117,7 +117,7 @@ def build_http_header_fields(headers: HttpHeaders) -> str:
 
 async def parse_http_request(reader: asyncio.StreamReader) -> HttpRequest | None:
     # request line
-    if line := await reader.readline():
+    if line := await reader.readuntil(B_CRLF):
         method, target, http_version = line.rstrip(B_CRLF).split(maxsplit=2)
 
         # header fields
@@ -152,7 +152,7 @@ def build_http_request(http_request: HttpRequest) -> bytes:
 
 async def parse_http_response(reader: asyncio.StreamReader) -> HttpResponse | None:
     # status line
-    if line := await reader.readline():
+    if line := await reader.readuntil(B_CRLF):
         http_version, status, message = line.rstrip(B_CRLF).split(maxsplit=2)
 
         # header fields
