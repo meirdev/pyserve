@@ -14,6 +14,8 @@ from pyserve import http
 print(f"Hi {http.GET['name']}!")
 ```
 
+_You must import pyserve even if you are not using it. Otherwise, you need to explicitly write the correct HTTP headers for your script_
+
 Make the file executable:
 
 ```bash
@@ -23,7 +25,7 @@ chmod +x hello.py
 Start the server:
 
 ```bash
-python3 -m pyserve
+python3 pyserve.py
 ```
 
 Open `http://localhost:8000/hello.py?name=Meir` in your browser.
@@ -31,7 +33,7 @@ Open `http://localhost:8000/hello.py?name=Meir` in your browser.
 You should see the following output:
 
 ```
-Hi Meir!
+Hi! ['Meir']
 ```
 
 ## Performance
@@ -39,7 +41,9 @@ Hi Meir!
 Due to the fact that a new process is created for each request, the performance is not very good.
 
 ```python
-from pyserve import http
+#!/usr/bin/env python3
+
+import pyserve
 
 print("Hello World!")
 ```
